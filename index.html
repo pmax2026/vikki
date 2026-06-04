@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vikki — Trúng Ngựa Vàng Ký Mùa 3 | Performance Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --vikki-purple-dark: #4A0E5C;
+    --vikki-purple: #6B1C7E;
+    --vikki-purple-light: #8E2D9F;
+    --vikki-magenta: #B83A8F;
+    --vikki-pink: #E04A9D;
+    --vikki-gold: #D4A017;
+    --vikki-gold-light: #F4C430;
+    --vikki-gold-bright: #FFD700;
+    --bg-cream: #FAF7F2;
+    --bg-white: #FFFFFF;
+    --text-dark: #1A0F2E;
+    --text-mid: #4A3F5C;
+    --text-light: #7B7188;
+    --success: #2D8659;
+    --warning: #D97706;
+    --danger: #C2185B;
+    --border: #E8E0EE;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    background: var(--bg-cream);
+    color: var(--text-dark);
+    line-height: 1.5;
+    font-size: 13px;
+  }
+
+  .deck {
+    display: flex;
+    height: 100vh;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+  }
+  .deck::-webkit-scrollbar { height: 6px; }
+  .deck::-webkit-scrollbar-track { background: #F0E5F5; }
+  .deck::-webkit-scrollbar-thumb { background: var(--vikki-purple); border-radius: 3px; }
+
+  .slide {
+    flex: 0 0 100vw;
+    height: 100vh;
+    scroll-snap-align: start;
+    padding: 50px 60px 80px;
+    overflow-y: auto;
+    position: relative;
+  }
+  .slide::-webkit-scrollbar { width: 6px; }
+  .slide::-webkit-scrollbar-track { background: transparent; }
+  .slide::-webkit-scrollbar-thumb { background: rgba(107, 28, 126, 0.3); border-radius: 3px; }
+
+  .slide-num {
+    position: absolute;
+    top: 24px;
+    right: 32px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--vikki-purple-light);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .title-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid var(--vikki-purple);
+  }
+  .title-badge {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--vikki-purple) 0%, var(--vikki-magenta) 100%);
+    color: white;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 16px;
+    flex-shrink: 0;
+  }
+  h1.slide-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--vikki-purple-dark);
+    letter-spacing: -0.3px;
+  }
+  .slide-subtitle {
+    font-size: 13px;
+    color: var(--text-mid);
+    margin-top: 2px;
+  }
+
+  .hero-slide {
+    background: linear-gradient(135deg, var(--vikki-purple-dark) 0%, var(--vikki-purple) 50%, var(--vikki-magenta) 100%);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-slide::before {
+    content: '🐴';
+    position: absolute;
+    right: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 280px;
+    opacity: 0.1;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: rgba(255, 215, 0, 0.2);
+    color: var(--vikki-gold-bright);
+    padding: 8px 20px;
+    border-radius: 999px;
+    font-size: 13px; font-weight: 600; letter-spacing: 0.5px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    align-self: flex-start;
+  }
+  .hero-slide h1 {
+    font-size: 56px; font-weight: 800; letter-spacing: -1px; margin-bottom: 12px;
+  }
+  .hero-slide .subtitle { font-size: 22px; opacity: 0.85; margin-bottom: 40px; }
+  .hero-meta {
+    display: flex; gap: 48px; margin-top: 32px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+  }
+  .hero-meta-item .label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.7; margin-bottom: 6px; }
+  .hero-meta-item .value { font-size: 17px; font-weight: 600; }
+  .hero-cta {
+    margin-top: 40px;
+    color: var(--vikki-gold-bright);
+    font-size: 14px;
+    font-weight: 600;
+    animation: bounce 2s infinite;
+  }
+  @keyframes bounce { 0%,100%{transform:translateX(0);} 50%{transform:translateX(8px);} }
+
+  .exec-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    border-left: 6px solid var(--vikki-gold);
+    box-shadow: 0 4px 20px rgba(74, 14, 92, 0.06);
+    margin-bottom: 20px;
+  }
+  .exec-card .label {
+    color: var(--vikki-purple);
+    font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .exec-card p { font-size: 15px; line-height: 1.7; color: var(--text-dark); }
+  .exec-card strong { color: var(--vikki-purple-dark); }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .kpi-card {
+    background: linear-gradient(135deg, #FFFCF5 0%, #FFF9E8 100%);
+    border: 1px solid #F4E4A8;
+    border-radius: 14px;
+    padding: 18px;
+  }
+  .kpi-card.purple {
+    background: linear-gradient(135deg, #FAF5FC 0%, #F3E8F7 100%);
+    border-color: #E5C7EF;
+  }
+  .kpi-card .kpi-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--text-mid); margin-bottom: 8px; font-weight: 600;
+  }
+  .kpi-card .kpi-value {
+    font-size: 22px; font-weight: 800; color: var(--vikki-purple-dark);
+    margin-bottom: 4px; line-height: 1.1;
+  }
+  .kpi-card .kpi-delta { font-size: 11px; font-weight: 600; margin-top: 6px; }
+  .kpi-delta.up { color: var(--success); }
+  .kpi-delta.down { color: var(--danger); }
+  .kpi-delta.warn { color: var(--warning); }
+
+  .table-wrap {
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    margin: 12px 0 18px;
+    max-height: calc(100vh - 280px);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  thead {
+    background: linear-gradient(135deg, var(--vikki-purple) 0%, var(--vikki-purple-light) 100%);
+    position: sticky; top: 0; z-index: 2;
+  }
+  thead th {
+    color: white;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+  }
+  thead th.num { text-align: right; }
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #FAF5FC; }
+  tbody tr:nth-child(even) { background: #FCFAFD; }
+  tbody tr:nth-child(even):hover { background: #F5EDF8; }
+  tbody td { padding: 9px 12px; vertical-align: middle; white-space: nowrap; }
+  tbody td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tbody td.bold { font-weight: 600; color: var(--vikki-purple-dark); }
+  tbody tr.total { background: linear-gradient(90deg, #F0DBF6 0%, #FFF0C8 100%); font-weight: 700; }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .badge.good { background: #D8F0E3; color: var(--success); }
+  .badge.bad { background: #FCE0EC; color: var(--danger); }
+  .badge.warn { background: #FEE9D0; color: var(--warning); }
+  .badge.best { background: linear-gradient(135deg, var(--vikki-gold-light), var(--vikki-gold)); color: var(--vikki-purple-dark); }
+
+  .note {
+    background: linear-gradient(135deg, #FAF5FC 0%, #FFF9E8 100%);
+    border-left: 4px solid var(--vikki-gold);
+    padding: 14px 18px;
+    margin: 14px 0;
+    border-radius: 0 10px 10px 0;
+    font-size: 13px;
+  }
+  .note-label {
+    color: var(--vikki-purple); font-weight: 700; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;
+  }
+  .note ul { margin: 0; padding-left: 18px; }
+  .note ul li { margin-bottom: 4px; }
+
+  .rc-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .rc-card {
+    background: linear-gradient(135deg, #FFF5F8 0%, #FFEBEF 100%);
+    border-radius: 10px;
+    padding: 12px;
+    border-left: 4px solid var(--danger);
+  }
+  .rc-title { font-weight: 700; color: var(--danger); margin-bottom: 4px; font-size: 12px; }
+  .rc-card p { font-size: 11px; color: var(--text-dark); }
+
+  .tldr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 20px; }
+  .tldr-card { padding: 18px; border-radius: 14px; }
+  .tldr-card.working {
+    background: linear-gradient(135deg, #E8F7EE 0%, #D8F0E3 100%);
+    border-left: 5px solid var(--success);
+  }
+  .tldr-card.broken {
+    background: linear-gradient(135deg, #FFF0F4 0%, #FCE0EC 100%);
+    border-left: 5px solid var(--danger);
+  }
+  .tldr-card h3 { font-size: 14px; margin-bottom: 8px; }
+  .tldr-card ul { list-style: none; padding: 0; }
+  .tldr-card ul li {
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    font-size: 12px;
+  }
+  .tldr-card ul li:last-child { border-bottom: none; }
+  .big-move {
+    background: linear-gradient(135deg, var(--vikki-purple) 0%, var(--vikki-magenta) 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 14px;
+    text-align: center;
+  }
+  .big-move-label {
+    color: var(--vikki-gold-bright);
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .big-move-text { font-size: 14px; font-weight: 600; line-height: 1.5; }
+
+  .priority-label {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .priority-label.critical { background: #FCE0EC; color: var(--danger); }
+  .priority-label.high { background: #FEE9D0; color: var(--warning); }
+  .priority-label.medium { background: #D8F0E3; color: var(--success); }
+
+  .nav-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 56px;
+    background: rgba(74, 14, 92, 0.95);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 0 20px;
+    z-index: 100;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+    overflow-x: auto;
+  }
+  .nav-dot {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .nav-dot:hover { background: rgba(255,255,255,0.25); }
+  .nav-dot.active { background: var(--vikki-gold); color: var(--vikki-purple-dark); }
+  .nav-arrow {
+    background: rgba(255,215,0,0.2);
+    color: var(--vikki-gold-bright);
+    border: none;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .nav-arrow:hover { background: var(--vikki-gold); color: var(--vikki-purple-dark); }
+  .nav-counter {
+    color: var(--vikki-gold-bright);
+    font-size: 11px;
+    font-weight: 700;
+    margin: 0 12px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  @media (max-width: 1100px) {
+    .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+    .two-col, .rc-grid, .tldr-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <section class="slide hero-slide" data-name="Trang đầu">
+    <span class="hero-tag">🏆 PERFORMANCE REPORT</span>
+    <h1>Vikki<br>Trúng Ngựa Vàng Ký Mùa 3</h1>
+    <div class="subtitle">Campaign-to-Date | 14/04 → 26/05/2026</div>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><div class="label">Client</div><div class="value">Vikki Digital Bank</div></div>
+      <div class="hero-meta-item"><div class="label">Agency</div><div class="value">PMAX</div></div>
+      <div class="hero-meta-item"><div class="label">Channels</div><div class="value">Meta + TikTok Ads</div></div>
+      <div class="hero-meta-item"><div class="label">Solution</div><div class="value">Branding &amp; App</div></div>
+    </div>
+    <div class="hero-cta">→ Kéo ngang hoặc dùng phím mũi tên để xem các sections</div>
+  </section>
+
+  <section class="slide" data-name="Tổng quan">
+    <div class="slide-num">SECTION 01 / 9</div>
+    <div class="title-row">
+      <div class="title-badge">1</div>
+      <div>
+        <h1 class="slide-title">Overall — KPI vs Actual</h1>
+        <div class="slide-subtitle">Tóm tắt nhanh + bảng tổng hợp chỉ số</div>
+      </div>
+    </div>
+
+    <div class="exec-card">
+      <div class="label">⚡ Executive Summary</div>
+      <p><strong>Các mục tiêu chính đều vượt cam kết về số lượng, ở đơn giá rẻ hơn kế hoạch nhiều lần:</strong> tương tác vượt mục tiêu ~6 lần, cài đặt app vượt ~27%, độ phủ &amp; lượt xem đều đạt — tất cả ở CPM/CPE/CPV/CPI thấp hơn kế hoạch. <strong>⇒ Ngân sách đang được dùng rất hiệu quả.</strong>
+      Tuy nhiên mới dùng <strong>14.69% ngân sách</strong> (thời gian đã trôi 50.6%) → nếu tăng tốc chi tiêu, kết quả <strong>còn có thể tăng lên nhiều lần</strong>.
+      <strong>Cần xử lý:</strong> Facebook App chưa chạy (0% — phần ngân sách lớn nhất) và tỷ lệ Đăng ký/Cài đặt Android còn thấp (0.81%).</p>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card"><div class="kpi-label">Tổng chi phí</div><div class="kpi-value">118.75M</div><div class="kpi-delta warn">14.69% of 808.16M</div></div>
+      <div class="kpi-card purple"><div class="kpi-label">Impression</div><div class="kpi-value">11.72M</div><div class="kpi-delta up">Facebook 9.3M + TikTok 2.4M</div></div>
+      <div class="kpi-card purple"><div class="kpi-label">Engagement</div><div class="kpi-value">1.28M</div><div class="kpi-delta up">↑ Mục tiêu Engagement vượt 609%</div></div>
+      <div class="kpi-card"><div class="kpi-label">App Install</div><div class="kpi-value">6,898</div><div class="kpi-delta up">↑ Vượt 128% (TikTok App)</div></div>
+      <div class="kpi-card purple"><div class="kpi-label">Reach</div><div class="kpi-value">10.98M</div><div class="kpi-delta">Blended CPM 10,133</div></div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>Kênh</th><th>Mục tiêu</th><th>Nội dung</th>
+          <th class="num">Chi phí kế hoạch</th><th class="num">Đơn giá kế hoạch</th>
+          <th class="num">Chi phí thực tế</th><th class="num">Đơn giá thực tế</th>
+          <th class="num">% đạt (chi phí)</th><th class="num">% đạt (đơn giá)</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>Facebook</td><td>Reach</td><td>Live</td><td class="num">69,187,380</td><td class="num">8,400</td><td class="num">32,768,355</td><td class="num">7,692</td><td class="num"><span class="badge bad">47%</span></td><td class="num"><span class="badge good">109%</span></td></tr>
+          <tr><td>Facebook</td><td>Reach</td><td>AWO</td><td class="num">120,935,401</td><td class="num">8,400</td><td class="num">10,893,165</td><td class="num">4,985</td><td class="num"><span class="badge bad">9%</span></td><td class="num"><span class="badge good">169%</span></td></tr>
+          <tr><td>Facebook</td><td>Engagement</td><td>Live</td><td class="num">69,187,380</td><td class="num">1,260</td><td class="num">34,406,943</td><td class="num bold">63</td><td class="num"><span class="badge bad">50%</span></td><td class="num"><span class="badge best">2,013%</span></td></tr>
+          <tr><td>Facebook</td><td>Engagement</td><td>AWO</td><td class="num">60,420,140</td><td class="num">1,260</td><td class="num">5,552,911</td><td class="num bold">16</td><td class="num"><span class="badge bad">9%</span></td><td class="num"><span class="badge best">8,035%</span></td></tr>
+          <tr><td>Facebook</td><td>Engagement</td><td>Pagelike</td><td class="num">60,420,140</td><td class="num">1,260</td><td class="num">3,231,518</td><td class="num bold">210</td><td class="num"><span class="badge bad">5%</span></td><td class="num"><span class="badge best">601%</span></td></tr>
+          <tr><td>Facebook</td><td>App</td><td>App</td><td class="num">150,005,400</td><td class="num">18,500</td><td class="num bold">0</td><td class="num">—</td><td class="num"><span class="badge bad">0%</span></td><td class="num">—</td></tr>
+          <tr><td>TikTok</td><td>App</td><td>App</td><td class="num">100,003,600</td><td class="num">18,500</td><td class="num">17,009,898</td><td class="num">2,466</td><td class="num"><span class="badge bad">17%</span></td><td class="num"><span class="badge good">750%</span></td></tr>
+          <tr><td>TikTok</td><td>Reach</td><td>AWO</td><td class="num">84,995,400</td><td class="num">14,700</td><td class="num">8,748,043</td><td class="num">4,749</td><td class="num"><span class="badge bad">10%</span></td><td class="num"><span class="badge good">309%</span></td></tr>
+          <tr><td>TikTok</td><td>View</td><td>AWO</td><td class="num">46,500,100</td><td class="num">850</td><td class="num">3,384,310</td><td class="num bold">127</td><td class="num"><span class="badge bad">7%</span></td><td class="num"><span class="badge good">669%</span></td></tr>
+          <tr><td>TikTok</td><td>View</td><td>Pagelike</td><td class="num">46,500,100</td><td class="num">850</td><td class="num">2,751,192</td><td class="num bold">655</td><td class="num"><span class="badge bad">6%</span></td><td class="num"><span class="badge good">130%</span></td></tr>
+          <tr class="total"><td colspan="3" class="bold">GRAND TOTAL</td><td class="num bold">808,155,042</td><td class="num bold">—</td><td class="num bold">118,747,306</td><td class="num bold">—</td><td class="num"><span class="badge warn">14.69%</span></td><td class="num">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="color:var(--text-light);font-size:11px;margin-top:-8px;">Unit cost được xem theo từng mục tiêu, không cộng gộp ở dòng tổng vì khác đơn vị (CPM / CPE / CPV / CPI).</div>
+  </section>
+
+  <section class="slide" data-name="Pool & Reach">
+    <div class="slide-num">SECTION 02 / 9</div>
+    <div class="title-row">
+      <div class="title-badge">1B</div>
+      <div><h1 class="slide-title">Audience Pool & Reach</h1><div class="slide-subtitle">Độ phủ thực tế so với quy mô khán giả có thể tiếp cận · theo Chiến dịch × Kênh</div></div>
+    </div>
+
+    <div class="note" style="margin-top:0;">
+      <div class="note-label">🎯 Detail Targeting</div>
+      <ul>
+        <li><strong>Facebook:</strong> Saving, Bank account, Financial market, Personal finance, Financial plan/services, Savings account, Digital wallet, Investment management/strategy, Online banking, Savings bank, Wealth management, Retirement planning, Pension/Pension fund, Retirement age</li>
+        <li><strong>TikTok:</strong> Third-Party Payments, Digital Devices, Investment Planning & Management, Securities, Technology</li>
+      </ul>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th rowspan="2">Chỉ số</th>
+            <th colspan="2" style="text-align:center">AWO</th>
+            <th colspan="2" style="text-align:center">Live</th>
+            <th colspan="2" style="text-align:center">App</th>
+            <th colspan="2" style="text-align:center">Pagelike</th>
+          </tr>
+          <tr>
+            <th class="num">Facebook</th><th class="num">TikTok</th>
+            <th class="num">Facebook</th><th class="num">TikTok</th>
+            <th class="num">Facebook</th><th class="num">TikTok</th>
+            <th class="num">Facebook</th><th class="num">TikTok</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="bold">Media spending</td><td class="num">9,248,790</td><td class="num">3,803,973</td><td class="num">23,590,828</td><td class="num">—</td><td class="num">—</td><td class="num">3,398,034</td><td class="num">0</td><td class="num">1,545,804</td></tr>
+          <tr><td class="bold">Tổng khán giả có thể tiếp cận</td><td class="num">29,250,000</td><td class="num">26,629,000</td><td class="num">29,250,000</td><td class="num">26,629,000</td><td class="num">29,250,000</td><td class="num">26,629,000</td><td class="num">29,250,000</td><td class="num">26,629,000</td></tr>
+          <tr><td class="bold">Impression</td><td class="num">1,725,835</td><td class="num">465,062</td><td class="num">2,767,063</td><td class="num">—</td><td class="num">—</td><td class="num">23,826</td><td class="num">0</td><td class="num">13,687</td></tr>
+          <tr><td class="bold">CPM</td><td class="num">5,359</td><td class="num">8,179</td><td class="num">8,526</td><td class="num">—</td><td class="num">—</td><td class="num">142,619</td><td class="num">0</td><td class="num">112,940</td></tr>
+          <tr><td class="bold">Frequency</td><td class="num">2.15</td><td class="num">0.75</td><td class="num">0.94</td><td class="num">—</td><td class="num">—</td><td class="num">0.14</td><td class="num">0.00</td><td class="num">3.53</td></tr>
+          <tr><td class="bold">Unique Reach</td><td class="num">802,023</td><td class="num">616,217</td><td class="num bold">2,938,639</td><td class="num">—</td><td class="num">—</td><td class="num">169,806</td><td class="num">27,047</td><td class="num">3,881</td></tr>
+          <tr style="background:linear-gradient(90deg,#F0DBF6,#FFF0C8);font-weight:700;"><td class="bold">% đã tiếp cận</td><td class="num">2.74%</td><td class="num">2.31%</td><td class="num"><span class="badge best">10.05%</span></td><td class="num">0.00%</td><td class="num">0.00%</td><td class="num">0.64%</td><td class="num">0.09%</td><td class="num">0.01%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note">
+      <div class="note-label">📝 Nhận xét — độ phủ</div>
+      <ul>
+        <li><strong>Lượng người có thể tiếp cận còn rất lớn: Facebook 29.25M, TikTok 26.6M</strong> — nhưng mới chạm tối đa ~10% → còn rất nhiều chỗ để tăng độ phủ</li>
+        <li><strong>Live Facebook phủ mạnh nhất 10.05%</strong> (Unique Reach 2.94M) — Live là format kéo reach hiệu quả nhất trên Facebook</li>
+        <li>AWO phủ ~2.3–2.7% cả 2 kênh; App/Pagelike phủ &lt;1% (CPM cao do targeting hẹp: App-TikTok 142,619, Pagelike-TikTok 112,940)</li>
+        <li><strong>App-Facebook = 0 & Live-TikTok = 0</strong> — khớp report: Facebook App chưa launch, TikTok chưa chạy Live ✓</li>
+        <li style="color:var(--text-light);font-size:11px;">ⓘ Số liệu độ phủ lấy từ dữ liệu nhân khẩu học (khoảng thời gian riêng), dùng để tham khảo quy mô nhóm khán giả.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide" data-name="Channel">
+    <div class="slide-num">SECTION 03 / 9</div>
+    <div class="title-row">
+      <div class="title-badge">2</div>
+      <div><h1 class="slide-title">Deepdive by Channel</h1><div class="slide-subtitle">Meta vs TikTok</div></div>
+    </div>
+    <h3 style="color:var(--vikki-purple);font-size:14px;margin-bottom:8px;">KPI cam kết — kết quả theo kênh</h3>
+    <div class="table-wrap" style="max-height:none;">
+      <table>
+        <thead><tr><th>Kênh — Mục tiêu</th><th class="num">Kết quả đạt được</th><th class="num">Đơn giá thực tế</th><th class="num">Đơn giá kế hoạch</th><th>Hiệu quả</th></tr></thead>
+        <tbody>
+          <tr><td class="bold">Facebook — Reach</td><td class="num bold">6,119,843 lượt tiếp cận</td><td class="num">CPM 6,759</td><td class="num">CPM 8,400</td><td><span class="badge good">rẻ ~20%</span></td></tr>
+          <tr><td class="bold">Facebook — Engagement</td><td class="num bold">905,222 tương tác</td><td class="num">CPE 44</td><td class="num">CPE 1,260</td><td><span class="badge best">rẻ ~29x</span></td></tr>
+          <tr><td class="bold">TikTok — Reach</td><td class="num bold">1,827,070 lượt tiếp cận</td><td class="num">CPM 4,749</td><td class="num">CPM 14,700</td><td><span class="badge best">rẻ ~3x</span></td></tr>
+          <tr><td class="bold">TikTok — View</td><td class="num bold">26,656 lượt xem (15s)</td><td class="num">CPV 127</td><td class="num">CPV 850</td><td><span class="badge best">rẻ ~6.7x</span></td></tr>
+          <tr><td class="bold">App Install (TikTok)</td><td class="num bold">6,901 cài đặt</td><td class="num">CPI 2,465</td><td class="num">CPI 18,500</td><td><span class="badge best">rẻ ~7.5x</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="color:var(--text-light);font-size:11px;margin:-6px 0 16px;">Đơn giá so cùng đơn vị (CPM/CPE/CPV/CPI). App Install gộp Android 6,898 (TikTok) + iOS 3 (AppsFlyer); CPI tính trên tổng chi phí App TikTok (~17M). Chi tiết theo OS &amp; nhóm tuổi ở slide kế tiếp.</div>
+
+    <h3 style="color:var(--vikki-purple);font-size:14px;margin:6px 0 8px;">So sánh tổng thể Meta vs TikTok</h3>
+    <div class="table-wrap" style="max-height:none;">
+      <table>
+        <thead><tr><th>Chỉ số</th><th class="num">Meta</th><th class="num">TikTok</th><th>Kênh tốt hơn</th></tr></thead>
+        <tbody>
+          <tr><td>Chi phí</td><td class="num">86,853,863 (73%)</td><td class="num">31,893,443 (27%)</td><td>—</td></tr>
+          <tr><td>Impressions</td><td class="num">9,320,559</td><td class="num">2,395,775</td><td><span class="badge best">Meta 3.9x</span></td></tr>
+          <tr><td>Reach</td><td class="num">8,672,395</td><td class="num">2,305,111</td><td><span class="badge best">Meta 3.8x</span></td></tr>
+          <tr><td class="bold">CPM</td><td class="num bold">9,319</td><td class="num">13,312</td><td><span class="badge best">Meta -30%</span></td></tr>
+          <tr><td class="bold">Cost/Reach</td><td class="num bold">10</td><td class="num">14</td><td><span class="badge best">Meta -28%</span></td></tr>
+          <tr><td>CTR%</td><td class="num">0.42%</td><td class="num bold">1.85%</td><td><span class="badge best">TikTok 4.4x</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note">
+      <div class="note-label">📝 Nhận xét</div>
+      <ul>
+        <li><strong>Meta = kênh chính để tăng nhận diện &amp; độ phủ</strong>: CPM rẻ hơn ~30%, độ phủ gấp ~3.8x</li>
+        <li><strong>TikTok = kênh chính tạo tương tác</strong>: CTR cao gấp ~4.4x</li>
+        <li>Đề xuất: giữ vai trò mỗi kênh — Meta dẫn độ phủ, TikTok tối ưu tương tác / chuyển đổi</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide" data-name="App × OS × Audience">
+    <div class="slide-num">SECTION 04 / 9</div>
+    <div class="title-row">
+      <div class="title-badge">3</div>
+      <div><h1 class="slide-title">App Install — OS × Audience</h1><div class="slide-subtitle">Android vs iOS × Young vs Senior</div></div>
+    </div>
+
+    <h3 style="color:var(--vikki-purple);font-size:14px;margin-bottom:8px;">Theo hệ điều hành (OS)</h3>
+    <div class="table-wrap" style="max-height:200px;">
+      <table>
+        <thead><tr><th>OS</th><th class="num">Chi phí</th><th class="num">Install</th><th class="num">Đăng ký</th><th class="num">CPI</th><th class="num">Chi phí/Đăng ký</th><th class="num">Đăng ký/Install %</th><th>Vấn đề</th></tr></thead>
+        <tbody>
+          <tr><td class="bold">Android</td><td class="num">15,871,901</td><td class="num">6,898</td><td class="num">56*</td><td class="num bold">2,301</td><td class="num">283,427</td><td class="num bold">0.81%</td><td><span class="badge bad">🔴 Nghẽn phễu</span></td></tr>
+          <tr><td class="bold">iOS</td><td class="num">1,137,997</td><td class="num">3</td><td class="num">—</td><td class="num bold">~379,332</td><td class="num">—</td><td class="num">—</td><td><span class="badge warn">⚠️ Volume thấp · CPI cao</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="color:var(--vikki-purple);font-size:14px;margin:16px 0 8px;">Theo hệ điều hành × Nhóm khán giả</h3>
+    <div class="table-wrap" style="max-height:240px;">
+      <table>
+        <thead><tr><th>OS</th><th>Audience</th><th class="num">Chi phí</th><th class="num">% chi phí</th><th class="num">Install</th><th class="num">CPI</th><th>Ghi chú</th></tr></thead>
+        <tbody>
+          <tr><td class="bold">Android</td><td class="bold">YOUNG</td><td class="num">12,331,109</td><td class="num">72.5%</td><td class="num">5,358</td><td class="num bold">2,301</td><td><span class="badge best">🏆 Tiếp tục scale up</span></td></tr>
+          <tr><td class="bold">Android</td><td class="bold">SENIOR</td><td class="num">3,540,792</td><td class="num">20.8%</td><td class="num">1,540</td><td class="num bold">2,299</td><td><span class="badge good">CPI = Young — nên tăng thêm</span></td></tr>
+          <tr><td>iOS</td><td>YOUNG</td><td class="num">624,726</td><td class="num">3.7%</td><td class="num">2</td><td class="num">312,363</td><td><span class="badge warn">Đo qua AppsFlyer</span></td></tr>
+          <tr><td>iOS</td><td>SENIOR</td><td class="num">513,271</td><td class="num">3.0%</td><td class="num">1</td><td class="num">513,271</td><td><span class="badge warn">Đo qua AppsFlyer</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note">
+      <div class="note-label">📝 Insight quan trọng</div>
+      <ul>
+        <li><strong>CPI Android YOUNG (2,301) ≈ SENIOR (2,299)</strong> — Senior cũng hiệu quả cho App</li>
+        <li>Hiện chỉ chi 21% budget cho SENIOR App → cân nhắc tăng lên <strong>30-35%</strong> (LTV cao hơn cho fintech tiết kiệm)</li>
+        <li>Android Đăng ký/Install 0.81% (mức chuẩn ngành 20-40%) → người dùng bị rớt nhiều ở bước đăng ký/mở tài khoản</li>
+        <li style="color:var(--text-light);font-size:11px;">* Số đăng ký (unique) lấy từ báo cáo riêng của TikTok; cài đặt và đăng ký đến từ 2 nguồn nên khoảng thời gian có thể lệch nhẹ.</li>
+      </ul>
+    </div>
+
+    <div style="background:#FFF8F0;border-left:4px solid var(--warning);padding:12px 16px;border-radius:0 10px 10px 0;margin-top:12px;">
+      <div style="color:var(--warning);font-weight:700;font-size:12px;margin-bottom:6px;">📱 iOS — hướng xử lý</div>
+      <ul style="font-size:11px;color:var(--text-dark);line-height:1.65;margin:0;padding-left:18px;">
+        <li><strong>Tạm thời chưa scale iOS</strong> — CPI quá cao, chưa hiệu quả → dồn ngân sách sang <strong>Android</strong> (volume lớn, CPI ~2,300).</li>
+        <li><strong>Chạy thêm Facebook cho App Install</strong> — kích hoạt kênh Facebook App (hiện chưa chạy) để bổ sung nguồn install và giảm phụ thuộc một mình TikTok.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide" data-name="Growth Page">
+    <div class="slide-num">SECTION 05 / 9</div>
+    <div class="title-row">
+      <div class="title-badge">3B</div>
+      <div><h1 class="slide-title">Tăng trưởng Trang &amp; Kênh</h1><div class="slide-subtitle">Người theo dõi mới từ chiến dịch Pagelike (Facebook) &amp; LikePage (TikTok)</div></div>
+    </div>
+
+    <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr);">
+      <div class="kpi-card"><div class="kpi-label">Tổng người theo dõi mới</div><div class="kpi-value">2,323</div><div class="kpi-delta up">Facebook 1,471 + TikTok 852</div></div>
+      <div class="kpi-card purple"><div class="kpi-label">Lượt thích Trang (Facebook)</div><div class="kpi-value">1,471</div><div class="kpi-delta">~2,197đ / lượt</div></div>
+      <div class="kpi-card purple"><div class="kpi-label">Follow mới (TikTok)</div><div class="kpi-value">852</div><div class="kpi-delta">~3,229đ / follow</div></div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Kênh</th><th class="num">Chi phí</th><th class="num">Người theo dõi mới</th><th class="num">Nghiệm thu — Kế hoạch</th><th class="num">Nghiệm thu — Thực tế</th><th class="num">vs Kế hoạch</th><th>Đánh giá</th></tr></thead>
+        <tbody>
+          <tr><td class="bold">Facebook (Pagelike)</td><td class="num">3,231,518</td><td class="num bold">1,471 lượt thích Trang</td><td class="num">CPE 1,260</td><td class="num bold">CPE 210</td><td class="num"><span class="badge best">600%</span></td><td><span class="badge best">✨ rẻ 6x — còn tăng được nhiều</span></td></tr>
+          <tr><td class="bold">TikTok (LikePage)</td><td class="num">2,751,192</td><td class="num bold">852 follow</td><td class="num">CPV view-2s 850</td><td class="num bold">CPV view-2s 655</td><td class="num"><span class="badge good">130%</span></td><td><span class="badge good">✨ rẻ ~30% — còn tăng được nhiều</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note">
+      <div class="note-label">📝 Nhận xét</div>
+      <ul>
+        <li>2 chiến dịch tăng Trang/Kênh đem về <strong>2,323 người theo dõi mới</strong> (1,471 lượt thích Trang Facebook + 852 follow TikTok), chi phí trung bình ~2,575đ/người theo dõi.</li>
+        <li>Nghiệm thu theo đơn giá hợp đồng — Facebook tính trên <strong>CPE</strong>, TikTok tính trên <strong>CPV view-2s</strong>: cả hai đều rẻ hơn kế hoạch (CPE 210 vs 1,260 — rẻ 6x; CPV-2s 655 vs 850 — rẻ ~30%) → hiệu quả tốt, <strong>còn tăng quy mô được nhiều</strong> (mới dùng ~6% ngân sách kế hoạch của nhóm này).</li>
+        <li>Nghiệm thu KHÔNG dùng CPM (vì nhóm này chạy bằng ngân sách Engagement/View).</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide" data-name="Audience &amp; Region">
+    <div class="slide-num">SECTION 06 / 9</div>
+    <div class="title-row">
+      <div class="title-badge">4</div>
+      <div><h1 class="slide-title">Deepdive by Audience</h1><div class="slide-subtitle">Theo nhóm tuổi &amp; vùng · ⓘ Dữ liệu: 01/04–15/05</div></div>
+    </div>
+
+    <h3 style="color:var(--vikki-purple);font-size:14px;margin-bottom:8px;">Toàn bộ chỉ số theo nhóm khán giả — Meta</h3>
+    <div class="table-wrap" style="max-height:none;">
+      <table>
+        <thead><tr><th>Nhóm</th><th class="num">Chi phí</th><th class="num">Impression</th><th class="num">Reach</th><th class="num">Engagement</th><th class="num">Clicks</th><th class="num">CTR%</th><th class="num">CPE</th></tr></thead>
+        <tbody>
+          <tr><td class="bold">Senior</td><td class="num">48,807,404</td><td class="num">5,369,564</td><td class="num">5,036,731</td><td class="num bold">794,619</td><td class="num">25,526</td><td class="num">0.48%</td><td class="num bold">61</td></tr>
+          <tr><td class="bold">Young</td><td class="num">38,046,459</td><td class="num">3,970,537</td><td class="num">3,653,020</td><td class="num">484,741</td><td class="num">13,945</td><td class="num">0.35%</td><td class="num">78</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="color:var(--vikki-purple);font-size:14px;margin:16px 0 8px;">Toàn bộ chỉ số theo nhóm khán giả — TikTok</h3>
+    <div class="table-wrap" style="max-height:none;">
+      <table>
+        <thead><tr><th>Nhóm</th><th class="num">Chi phí</th><th class="num">Impression</th><th class="num">Reach</th><th class="num">View (2s)</th><th class="num">Clicks</th><th class="num">CTR%</th><th class="num">Install</th></tr></thead>
+        <tbody>
+          <tr><td class="bold">Senior</td><td class="num">11,734,440</td><td class="num">1,202,583</td><td class="num">1,167,426</td><td class="num">160,481</td><td class="num">13,759</td><td class="num">1.14%</td><td class="num">1,540</td></tr>
+          <tr><td class="bold">Young</td><td class="num">20,159,003</td><td class="num">1,193,192</td><td class="num">1,137,685</td><td class="num">113,602</td><td class="num">30,614</td><td class="num bold">2.57%</td><td class="num bold">5,358</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="color:var(--text-light);font-size:11px;margin:-6px 0 14px;">Reach/View là số cộng dồn theo ngày. CPI theo nhóm tuổi xem ở slide App Install.</div>
+
+    <h3 style="color:var(--vikki-purple);font-size:14px;margin:16px 0 8px;">Chi tiết theo độ tuổi</h3>
+    <div class="two-col">
+      <div>
+        <h3 style="color:var(--vikki-purple);font-size:14px;margin-bottom:8px;">Meta — theo độ tuổi</h3>
+        <div class="table-wrap" style="max-height:none;">
+          <table>
+            <thead><tr><th>Độ tuổi</th><th class="num">Chi phí</th><th class="num">%</th><th class="num">CPE</th><th class="num">ER%</th></tr></thead>
+            <tbody>
+              <tr><td class="bold">25-34</td><td class="num">28.9M</td><td class="num bold">38.4%</td><td class="num">79</td><td class="num"><span class="badge bad">12.5%</span></td></tr>
+              <tr><td>35-44</td><td class="num">18.9M</td><td class="num">25.2%</td><td class="num">93</td><td class="num">10.0%</td></tr>
+              <tr><td>45-54</td><td class="num">12.5M</td><td class="num">16.6%</td><td class="num">68</td><td class="num">13.4%</td></tr>
+              <tr><td>55-64</td><td class="num">9.5M</td><td class="num">12.6%</td><td class="num">47</td><td class="num"><span class="badge good">20.3%</span></td></tr>
+              <tr><td class="bold">65+</td><td class="num">5.4M</td><td class="num">7.2%</td><td class="num bold">41</td><td class="num"><span class="badge best">25.4%</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <h3 style="color:var(--vikki-purple);font-size:14px;margin-bottom:8px;">TikTok — theo độ tuổi</h3>
+        <div class="table-wrap" style="max-height:none;">
+          <table>
+            <thead><tr><th>Độ tuổi</th><th class="num">%</th><th class="num">Install</th><th class="num">CPI</th></tr></thead>
+            <tbody>
+              <tr><td class="bold">25-34</td><td class="num bold">60%</td><td class="num">5,386 (78%)</td><td class="num bold">3,781</td></tr>
+              <tr><td>35-44</td><td class="num">15.5%</td><td class="num">1,013</td><td class="num">5,173</td></tr>
+              <tr><td>45-54</td><td class="num">10.1%</td><td class="num">533</td><td class="num">6,445</td></tr>
+              <tr><td>≥55</td><td class="num">6.3%</td><td class="num">0</td><td class="num">n/a</td></tr>
+              <tr><td>13-17 + 18-24</td><td class="num">1.7%</td><td class="num">0</td><td class="num">n/a</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="color:var(--vikki-purple);font-size:14px;margin:18px 0 8px;">Top 5 vùng theo chi tiêu — Meta</h3>
+    <div class="table-wrap" style="max-height:none;">
+      <table>
+        <thead><tr><th>Vùng</th><th class="num">Chi phí</th><th class="num">%</th><th class="num">CPM</th></tr></thead>
+        <tbody>
+          <tr><td class="bold">HCMC</td><td class="num">6,484,062</td><td class="num">8.6%</td><td class="num">11,818</td></tr>
+          <tr><td class="bold">Hà Nội</td><td class="num">4,519,856</td><td class="num">6.0%</td><td class="num">11,692</td></tr>
+          <tr><td>Nghệ An</td><td class="num">2,990,780</td><td class="num">4.0%</td><td class="num">9,794</td></tr>
+          <tr><td>Thanh Hóa</td><td class="num">2,669,991</td><td class="num">3.6%</td><td class="num">9,654</td></tr>
+          <tr><td>Đồng Nai</td><td class="num">2,311,331</td><td class="num">3.1%</td><td class="num">9,732</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note">
+      <div class="note-label">📝 Insight ngược kỳ vọng</div>
+      <ul>
+        <li>Meta <strong>65+ ER 25.4%, CPE 41</strong> (rẻ gấp 2x age 25-34) — Senior engage tốt hơn Young với Livestream content</li>
+        <li>Hiện nhóm 25-34 đang nhận quá nhiều ngân sách (38%) trong khi 65+ chỉ 7% — nên điều chỉnh lại</li>
+        <li>TikTok đúng chiều: 25-34 dominate install (78%) — phù hợp App acquisition</li>
+        <li>TikTok age &lt;25 0 install — loại trừ</li>
+        <li><strong>HCMC + Hà Nội chỉ chiếm 14.6%</strong> chi tiêu — phù hợp chiến lược phủ rộng Tier 2-3 cho fintech</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide" data-name="Angle × Audience (Meta)">
+    <div class="slide-num">SECTION 07 / 9</div>
+    <div class="title-row">
+      <div class="title-badge">5A</div>
+      <div><h1 class="slide-title">Angle × Audience — META</h1><div class="slide-subtitle">CPE và ER% pivot</div></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3 style="color:var(--vikki-purple);font-size:14px;margin-bottom:8px;">CPE theo độ tuổi</h3>
+        <div class="table-wrap" style="max-height:none;">
+          <table>
+            <thead><tr><th>Angle</th><th class="num">SENIOR</th><th class="num">YOUNG</th><th>Ghi chú</th></tr></thead>
+            <tbody>
+              <tr><td class="bold">Master Video</td><td class="num bold">26</td><td class="num bold">26</td><td><span class="badge best">✨ Hiệu quả cả 2 nhóm</span></td></tr>
+              <tr><td>Livestream Kỳ 11</td><td class="num bold">44</td><td class="num">74</td><td>Senior win</td></tr>
+              <tr><td>Thông báo Live</td><td class="num">47</td><td class="num">82</td><td>Senior win</td></tr>
+              <tr><td>Livestream Kỳ 10</td><td class="num bold">53</td><td class="num">85</td><td>Senior win</td></tr>
+              <tr><td>Livestream Kỳ 9</td><td class="num bold">53</td><td class="num">96</td><td>Senior win</td></tr>
+              <tr><td>Livestream Kỳ 8</td><td class="num bold">58</td><td class="num">88</td><td>Senior win</td></tr>
+              <tr><td>Livestream Kỳ 6</td><td class="num bold">93</td><td class="num">168</td><td>Senior 1.8x</td></tr>
+              <tr><td>Livestream Kỳ 7</td><td class="num">97</td><td class="num">121</td><td>Senior win</td></tr>
+              <tr><td>Vikki Trúng Vàng</td><td class="num">202</td><td class="num">218</td><td>≈</td></tr>
+              <tr><td class="bold">Single Photo</td><td class="num">4,957</td><td class="num">7,136</td><td><span class="badge bad">❌ Hiệu suất rất thấp</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <h3 style="color:var(--vikki-purple);font-size:14px;margin-bottom:8px;">ER% theo độ tuổi</h3>
+        <div class="table-wrap" style="max-height:none;">
+          <table>
+            <thead><tr><th>Angle</th><th class="num">SENIOR</th><th class="num">YOUNG</th></tr></thead>
+            <tbody>
+              <tr><td class="bold">Vikki Trúng Vàng</td><td class="num bold">43.42%</td><td class="num">30.65%</td></tr>
+              <tr><td>Master Video</td><td class="num">23.38%</td><td class="num bold">25.73%</td></tr>
+              <tr><td>Livestream Kỳ 8</td><td class="num bold">20.54%</td><td class="num">8.91%</td></tr>
+              <tr><td>Livestream Kỳ 11</td><td class="num bold">18.97%</td><td class="num">11.82%</td></tr>
+              <tr><td>Livestream Kỳ 10</td><td class="num bold">16.70%</td><td class="num">10.01%</td></tr>
+              <tr><td>Livestream Kỳ 9</td><td class="num bold">16.02%</td><td class="num">9.21%</td></tr>
+              <tr><td>Thông báo Live</td><td class="num">12.96%</td><td class="num">7.71%</td></tr>
+              <tr><td>Livestream Kỳ 6</td><td class="num">11.88%</td><td class="num">9.31%</td></tr>
+              <tr><td>Livestream Kỳ 7</td><td class="num">10.33%</td><td class="num">8.74%</td></tr>
+              <tr><td>Single Photo</td><td class="num">0.10%</td><td class="num">0.07%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <div class="note-label">📝 Insights mới quan trọng</div>
+      <ul>
+        <li><strong>Master Video</strong> = universal winner (CPE 26 cho cả 2 audience)</li>
+        <li><strong>Livestream content nhắm SENIOR mạnh</strong> — CPE rẻ 1.6-1.8x, ER cao 2x</li>
+        <li><strong>Vikki Trúng Vàng</strong>: ER 40% cho Senior (cực cao) nhưng CPM đắt 83K → dùng để nhắm lại nhóm Senior, không mở rộng đại trà</li>
+        <li>Nội dung Livestream hiệu quả hơn rõ rệt với nhóm <strong>Senior</strong> → ưu tiên Senior cho Livestream; Master Video hiệu quả đều cả 2 nhóm</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide" data-name="Pillar — TikTok">
+    <div class="slide-num">SECTION 08 / 9</div>
+    <div class="title-row">
+      <div class="title-badge">5B</div>
+      <div><h1 class="slide-title">Hiệu quả theo Pillar — TikTok</h1><div class="slide-subtitle">Pillar nội dung nào nên đầu tư thêm</div></div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Pillar nội dung</th><th class="num">Tỷ trọng chi</th><th class="num">App Install</th><th class="num">CPI</th><th class="num">CPV (View 15s)</th><th>Đánh giá</th></tr></thead>
+        <tbody>
+          <tr><td class="bold">Sản phẩm – Dịch vụ / Khuyến mãi</td><td class="num">67% · 21.3M</td><td class="num bold">5,829</td><td class="num bold">2,276</td><td class="num">121đ</td><td><span class="badge best">✨ Hiệu quả nhất cho App</span></td></tr>
+          <tr><td class="bold">Sự kiện</td><td class="num">33% · 10.6M</td><td class="num">1,069</td><td class="num">2,434</td><td class="num">150đ</td><td><span class="badge good">Tốt cho nhận diện / tương tác</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="color:var(--vikki-purple);font-size:14px;margin:16px 0 8px;">CPI theo nhóm khán giả</h3>
+    <div class="table-wrap" style="max-height:none;">
+      <table>
+        <thead><tr><th>Pillar</th><th class="num">CPI — Senior</th><th class="num">CPI — Young</th></tr></thead>
+        <tbody>
+          <tr><td class="bold">Sản phẩm – Dịch vụ / Khuyến mãi</td><td class="num">2,297</td><td class="num bold">2,272</td></tr>
+          <tr><td class="bold">Sự kiện</td><td class="num">2,306</td><td class="num">2,526</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note">
+      <div class="note-label">📝 Khuyến nghị theo pillar</div>
+      <ul>
+        <li><strong>Đầu tư thêm vào pillar "Sản phẩm – Dịch vụ / Khuyến mãi":</strong> CPI rẻ hơn (2,276 so với 2,434) và chi phí mỗi view rẻ hơn (121đ so với 150đ) — đây là nhóm nội dung kéo người dùng app hiệu quả nhất.</li>
+        <li><strong>Pillar "Sự kiện"</strong> có tỷ lệ xem video tốt hơn → mạnh cho nhận diện &amp; tương tác; nên tối ưu thêm để cải thiện hiệu quả cài đặt.</li>
+        <li>Theo nhóm khán giả: Sản phẩm–Dịch vụ/Khuyến mãi hiệu quả đều ở cả Senior &amp; Young (CPI ~2,272–2,297); Sự kiện hiệu quả hơn ở <strong>Senior</strong> (2,306) so với Young (2,526).</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide" data-name="Root Cause + Actions">
+    <div class="slide-num">SECTION 09 / 9</div>
+    <div class="title-row">
+      <div class="title-badge">🎯</div>
+      <div><h1 class="slide-title">Kết luận &amp; Khuyến nghị</h1><div class="slide-subtitle">Tổng kết &amp; kế hoạch hành động</div></div>
+    </div>
+
+    <h3 style="color:var(--vikki-purple);font-size:13px;margin-bottom:8px;">🔍 Nguyên nhân chính</h3>
+    <div class="rc-grid" style="margin-bottom:16px;">
+      <div class="rc-card"><div class="rc-title">1. Android Đăng ký/Install 0.81%</div><p>Người dùng bị nghẽn ở bước đăng ký / mở tài khoản (KYC/OTP) phía app</p></div>
+      <div class="rc-card"><div class="rc-title">2. Facebook App chưa chạy</div><p>Ngân sách App theo kế hoạch chưa được kích hoạt</p></div>
+      <div class="rc-card"><div class="rc-title">3. Meta dồn vào nhóm 25-34</div><p>Senior tương tác cao 2x, CPE rẻ 2x — nên cân nhắc lại phân bổ</p></div>
+      <div class="rc-card"><div class="rc-title">4. Master Video chưa tận dụng đủ</div><p>Chỉ 14.6% ngân sách dù CPE rẻ nhất (26) cho cả 2 nhóm</p></div>
+    </div>
+
+    <h3 style="color:var(--vikki-purple);font-size:13px;margin:14px 0 8px;">🎯 Khuyến nghị &amp; hành động tiếp theo</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px;">
+      <div>
+        <span class="priority-label medium">🎯 Nên đẩy mạnh để tăng trưởng</span>
+        <ul style="font-size:11px;padding-left:18px;line-height:1.65;">
+          <li><strong>Mở rộng nhóm Senior:</strong> tương tác tốt hơn Young (CPE rẻ ~2x) và cài app hiệu quả ngang Young (CPI ≈2,300) — còn nhiều cơ hội để tăng lượng người dùng &amp; tương tác.</li>
+          <li><strong>Ưu tiên nội dung hiệu quả:</strong> Livestream + Master Video là nội dung tạo tương tác mạnh nhất trên Meta; trên TikTok, pillar <strong>Sản phẩm – Dịch vụ / Khuyến mãi</strong> cho CPI app tốt nhất → tập trung sản xuất thêm các nhóm nội dung này.</li>
+          <li><strong>Giữ vai trò từng kênh:</strong> Meta kéo nhận diện &amp; độ phủ (CPM rẻ hơn), TikTok mạnh về tương tác &amp; chuyển đổi.</li>
+        </ul>
+      </div>
+      <div>
+        <span class="priority-label high">🤝 Cần Vikki phối hợp / quyết định</span>
+        <ul style="font-size:11px;padding-left:18px;line-height:1.65;">
+          <li><strong>Kích hoạt ngân sách App:</strong> phần lớn ngân sách App theo kế hoạch chưa chạy → cần quyết định &amp; thời điểm mở từ Vikki.</li>
+          <li><strong>Bổ sung creative:</strong> cấp thêm asset cho pillar/format đang hiệu quả nếu cần từ phía thương hiệu.</li>
+        </ul>
+      </div>
+    </div>
+    <div style="background:#FAF5FC;border-left:4px solid var(--vikki-purple);padding:10px 16px;border-radius:0 10px 10px 0;font-size:11px;color:var(--text-mid);margin-bottom:16px;">
+      <strong style="color:var(--vikki-purple);">⚙️ PMAX tối ưu trong quá trình chạy:</strong> team tiếp tục tinh chỉnh phân bổ ngân sách &amp; creative giữa các nhóm theo hiệu suất thực tế — kết quả tổng hợp sẽ trình bày ở báo cáo kỳ sau.
+    </div>
+
+    <div class="tldr-grid">
+      <div class="tldr-card working">
+        <h3>🟢 Điểm đang tốt</h3>
+        <ul>
+          <li>Meta Engagement CPE 48 (rẻ 26x plan)</li>
+          <li>Master Video CPE 26 universal Senior+Young</li>
+          <li>TikTok sangolf CPI 2,187 Senior, VTR 41%</li>
+          <li>Android SENIOR = Young CPI (≈2,300)</li>
+          <li>Facebook Pagelike CPE 210 (rẻ 6x plan)</li>
+          <li>TikTok Pagelike CPV 655 (rẻ hơn plan, view 2s)</li>
+        </ul>
+      </div>
+      <div class="tldr-card broken">
+        <h3>🔴 Điểm chưa tốt</h3>
+        <ul>
+          <li>Facebook App 0 spend (150M plan)</li>
+          <li>iOS chỉ 3 install (AppsFlyer), CPI rất cao → chưa scale</li>
+          <li>Android Đăng ký/Install 0.81%</li>
+          <li>Single Photo hiệu suất thấp (CPE/ER kém)</li>
+          <li>Tốc độ tiêu ngân sách chậm dần</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="big-move">
+      <div class="big-move-label">🎯 THE ONE BIG MOVE</div>
+      <div class="big-move-text">Mở Facebook App + mở rộng tệp Senior (đang hiệu quả ngang Young)<br>= dùng được phần ngân sách lớn đang chờ, đồng thời có thêm người dùng mới.</div>
+    </div>
+
+    <div style="text-align:center;color:var(--text-light);font-size:11px;margin-top:16px;">
+      Vikki — Trúng Ngựa Vàng Ký Mùa 3 · Dữ liệu cập nhật đến 26/05/2026 · Nguồn: Meta Ads Manager + TikTok Ads Manager
+    </div>
+  </section>
+
+</div>
+
+<nav class="nav-bar" id="navBar">
+  <button class="nav-arrow" onclick="navTo(-1)">←</button>
+  <span class="nav-counter" id="navCounter">1 / 9</span>
+  <button class="nav-arrow" onclick="navTo(1)">→</button>
+</nav>
+
+<script>
+  const deck = document.getElementById('deck');
+  const slides = document.querySelectorAll('.slide');
+  const navBar = document.getElementById('navBar');
+  const navCounter = document.getElementById('navCounter');
+
+  slides.forEach((s, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'nav-dot';
+    btn.textContent = s.dataset.name || `S${i}`;
+    btn.onclick = () => deck.scrollTo({ left: i * window.innerWidth, behavior: 'smooth' });
+    navBar.insertBefore(btn, navBar.children[navBar.children.length - 1]);
+  });
+
+  function updateActive() {
+    const idx = Math.round(deck.scrollLeft / window.innerWidth);
+    document.querySelectorAll('.nav-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === idx);
+    });
+    navCounter.textContent = `${idx + 1} / ${slides.length}`;
+  }
+  deck.addEventListener('scroll', updateActive);
+  updateActive();
+
+  function navTo(delta) {
+    const cur = Math.round(deck.scrollLeft / window.innerWidth);
+    const next = Math.max(0, Math.min(slides.length - 1, cur + delta));
+    deck.scrollTo({ left: next * window.innerWidth, behavior: 'smooth' });
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') navTo(1);
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') navTo(-1);
+    if (e.key === 'Home') deck.scrollTo({ left: 0, behavior: 'smooth' });
+    if (e.key === 'End') deck.scrollTo({ left: (slides.length - 1) * window.innerWidth, behavior: 'smooth' });
+  });
+</script>
+
+</body>
+</html>
